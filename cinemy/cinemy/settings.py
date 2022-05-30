@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "core",
     "contact",
+    "login",
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 CONTACT_EMAIL = env("CONTACT_EMAIL", default="")
 ADMIN_EMAIL = env("ADMIN_EMAIL", default="")
+
+# Settings related to authentication
+LOGIN_REDIRECT_URL = "/user/login"
+LOGOUT_REDIRECT_URL = "/"
