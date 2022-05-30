@@ -1,0 +1,86 @@
+ {%extends 'core/base.html' %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+
+<div class="container-xxl py-5" id="contact">
+        <div class="card shadow-lg ">
+            <div class="card-body p-3 ">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h2 class="text-primary-gradient fw-medium">Contact us <i class="fa fa-envelope" aria-hidden="true" style="color:#0d6efd"></i></h2>
+                </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <div class="wow fadeInUp" data-wow-delay="0.3s">
+                    <p class="text-center mb-4">Feel free to reach out to us by filling the above form</p>
+                    <form action="" method=POST>
+                        {% csrf_token %}
+                        {{ form.as_p}}
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name">
+                                    <label for="name">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="from_email" name="from_email" placeholder="Your Email">
+                                    <label for="from_email">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Your phone number">
+                                    <label for="phone_number">Your phone number</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="city" name="city" placeholder="City">
+                                    <label for="city">City</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="cinema" name="cinema" placeholder="Cinema">
+                                    <label for="cinema">Cinema</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject">
+                                    <label for="subject">Subject</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" placeholder="Leave a message here" id="message" name="message" style="height: 150px"></textarea>
+                                    <label for="message">Message</label>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center">
+                            <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0">
+                                <span class="d-flex align-items-center">
+                                <i class="bi-chat-text-fill me-2"></i>
+                                <span class="small">Contact</span>
+                                </span>
+                            </button>
+                            </div>
+                        </div>
+                    </form>
+                </br>
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <div class="alert alert-danger alert-dismissable text-center">
+                                 <i class="fa fa-exclamation-circle"></i>    
+                                {{msg.message}}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
