@@ -16,8 +16,10 @@ from django.contrib.sites.shortcuts import get_current_site
 from login.tokens import account_activation_token
 from django.utils.encoding import force_str
 from django.contrib.auth import get_user_model
+from ratelimit.decorators import ratelimit
 
 
+@ratelimit(key="ip", rate="30/m", block=True)
 def auth(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -32,6 +34,7 @@ def auth(request):
     return render(request, "login/login.html")
 
 
+@ratelimit(key="ip", rate="30/m", block=True)
 def signup(request):
     if request.method == "POST":
         try:
