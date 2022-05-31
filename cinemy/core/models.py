@@ -10,12 +10,12 @@ class Movie(models.Model):
     imdb_link = models.CharField(max_length=100)
     imdb_id = models.CharField(max_length=100)
     trailer_url = models.CharField(max_length=100)
-    length = models.CharField(max_length=10)
+    length = models.TimeField()
     available_from = models.DateField()
 
     @classmethod
     def create(
-        cls, name="", poster="", description="", imdb_id="", trailer_url="", length=""
+        cls, name="", poster="", description="", imdb_id="", trailer_url="", length=None
     ):
         movie = cls(
             name=name,
@@ -27,3 +27,6 @@ class Movie(models.Model):
             length=length,
         )
         return movie
+
+    class Meta:
+        ordering = ("available_from",)
