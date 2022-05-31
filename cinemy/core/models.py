@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -10,23 +11,12 @@ class Movie(models.Model):
     imdb_link = models.CharField(max_length=100)
     imdb_id = models.CharField(max_length=100)
     trailer_url = models.CharField(max_length=100)
-    length = models.TimeField()
+    length = models.IntegerField()
     available_from = models.DateField()
 
-    @classmethod
-    def create(
-        cls, name="", poster="", description="", imdb_id="", trailer_url="", length=None
-    ):
-        movie = cls(
-            name=name,
-            poster=poster,
-            description=description,
-            imdb_id=imdb_id,
-            imdb_link="https://www.imdb.com/title/" + imdb_id + "/",
-            trailer_url=trailer_url,
-            length=length,
-        )
-        return movie
+    def save(self, *args, **kwargs):
+        self.imdb_link = "https://www.imdb.com/title/" + self.imdb_id + "/"
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ("available_from",)
