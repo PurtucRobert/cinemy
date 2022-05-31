@@ -147,3 +147,8 @@ ADMIN_EMAIL = env("ADMIN_EMAIL", default="")
 # Settings related to authentication
 LOGIN_REDIRECT_URL = "/user/login"
 LOGOUT_REDIRECT_URL = "/"
+
+
+# Settings related to media
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media/"
