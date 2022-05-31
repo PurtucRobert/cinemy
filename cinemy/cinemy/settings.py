@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "core",
     "contact",
     "login",
-    "core.templatetags.filter",
 ]
 
 MIDDLEWARE = [
