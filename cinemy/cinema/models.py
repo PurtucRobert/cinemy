@@ -32,7 +32,7 @@ class Cinema(models.Model):
     description = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.name + f" - {self.city}"
+        return " - ".join((self.name, self.city))
 
 
 class Hall(models.Model):
@@ -50,7 +50,7 @@ class Hall(models.Model):
                 seat.save()
 
     def __str__(self):
-        return str(self.name) + " - " + str(self.cinema)
+        return " - ".join((self.name, str(self.cinema)))
 
 
 class Seat(models.Model):
