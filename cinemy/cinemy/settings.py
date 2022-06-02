@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "core",
     "contact",
     "login",
+    "cinema",
 ]
 
 MIDDLEWARE = [
