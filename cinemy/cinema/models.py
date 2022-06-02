@@ -40,3 +40,8 @@ class Cinema(models.Model):
 
 class Hall(models.Model):
     cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
+    description = models.CharField(max_length=200, null=True)
+    name = models.CharField(max_length=50, default="Hall")
+
+    def __str__(self):
+        return self.name
