@@ -1,6 +1,23 @@
 from django.db import models
 
 # Create your models here.
+SEATS = (
+    (1, "A1"),
+    (2, "A2"),
+    (3, "A3"),
+    (4, "A4"),
+    (5, "A5"),
+    (6, "B1"),
+    (7, "B2"),
+    (8, "B3"),
+    (9, "B4"),
+    (10, "B5"),
+    (11, "C1"),
+    (12, "C2"),
+    (13, "C3"),
+    (14, "C4"),
+    (15, "C5"),
+)
 
 
 class Movie(models.Model):
@@ -24,10 +41,6 @@ class Movie(models.Model):
         ordering = ("available_from",)
 
 
-class Seat(models.Model):
-    pass
-
-
 class Cinema(models.Model):
     city = models.CharField(max_length=50)
     address = models.CharField(max_length=200)
@@ -45,3 +58,8 @@ class Hall(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Seat(models.Model):
+    hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    name = models.IntegerField(choices=SEATS, default=1)
