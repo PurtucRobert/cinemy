@@ -3,7 +3,6 @@ name: Lint
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main]
     types: [opened, synchronize, closed]
     paths:
       - '*.py'
@@ -22,8 +21,8 @@ jobs:
         with:
           python-version: 3.9.13
           architecture: x64
-      - name: Checkout PyTorch
-        uses: actions/checkout@master
+      - name: Checkout CineMY
+        uses: actions/checkout@v3
       - name: Install flake8
         run: pip install flake8
       - name: Run flake8
