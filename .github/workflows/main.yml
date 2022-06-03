@@ -1,31 +1,26 @@
-- name: Python Code Quality and Lint
-  # You may pin to the exact commit or the version.
-  # uses: ricardochaves/python-lint@32032eca67291cd71f88d79e61bc4b904ee03265
-  uses: ricardochaves/python-lint@v1.3.0
-  with:
-    # A list of all paths to test
-    python-root-list: # optional, default is .
-    # Use Pylint
-    use-pylint: # optional, default is true
-    # Use pycodestyle
-    use-pycodestyle: # optional, default is true
-    # Use Flake8
-    use-flake8: # optional, default is true
-    # Use Black
-    use-black: # optional, default is true
-    # Use mypy
-    use-mypy: # optional, default is true
-    # Use isort
-    use-isort: # optional, default is true
-    # Extra options: pylint $(extra-pylint-options) $(python-root-list)
-    extra-pylint-options: # optional, default is 
-    # Extra options: pycodestyle $(extra-pycodestyle-options) $(python-root-list)
-    extra-pycodestyle-options: # optional, default is 
-    # Extra options: flake8 $(extra-flake8-options) $(python-root-list)
-    extra-flake8-options: # optional, default is 
-    # Extra options: black --check $(extra-black-options) $(python-root-list)
-    extra-black-options: # optional, default is 
-    # Extra options: mypy $(extra-mypy-options) $(python-root-list)
-    extra-mypy-options: # optional, default is 
-    # Extra options: isort -rc $(extra-isort-options) $(python-root-list) -c --diff 
-    extra-isort-options: # optional, default is 
+name: Lint
+
+on:
+  push:
+    paths:
+      - '*.py'
+
+jobs:
+  flake8_py3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7.4
+          architecture: x64
+      - name: Checkout PyTorch
+        uses: actions/checkout@master
+      - name: Install flake8
+        run: pip install flake8
+      - name: Run flake8
+        uses: suo/flake8-github-action@releases/v1
+        with:
+          checkName: 'flake8_py3'   # NOTE: this needs to be the same as the job name
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
