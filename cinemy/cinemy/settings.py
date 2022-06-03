@@ -146,9 +146,10 @@ CONTACT_EMAIL = env("CONTACT_EMAIL", default="")
 ADMIN_EMAIL = env("ADMIN_EMAIL", default="")
 
 # Settings related to authentication
-LOGIN_REDIRECT_URL = "/user/login"
+LOGIN_REDIRECT_URL = "/user/login/"
 LOGOUT_REDIRECT_URL = "/"
-
+LOGIN_URL = "/user/login/"
+LOGOUT_URL = "/"
 
 # Settings related to media
 MEDIA_URL = "media/"
