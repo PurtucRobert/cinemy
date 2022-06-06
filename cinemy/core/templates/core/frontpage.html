@@ -33,7 +33,7 @@ rel="stylesheet" />{%endblock%} {%block content%}
           <li class="tag__item rounded-pill"><a href={{ movie.imdb_link}} style="text-decoration:none"><i class="fas fa-tag mr-2"></i>  IMDB Link</li></a>
           <li class="tag__item rounded-pill"><i class="fas fa-clock mr-2"></i>  {{ movie.length|format_time }}</li>
           <li class="tag__item rounded-pill play blue">
-            <a href="#" style="text-decoration:none"><i class="fas fa-play mr-2"></i>  Book a ticket</a>
+            <a href="{% url 'select_cinema' %}" style="text-decoration:none"><i class="fas fa-play mr-2"></i>  Book a ticket</a>
           </li>
         </ul>
       </div>

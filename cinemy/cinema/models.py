@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.html import format_html
+from django.contrib.auth.models import User
+from datetime import datetime, timedelta
 
 # Create your models here.
 
@@ -60,3 +62,43 @@ class Seat(models.Model):
 
     def __str__(self):
         return format_html(f"Seat: {self.name}<br>Hall: {str(self.hall)}")
+
+
+class PlayingTime(models.Model):
+    assigned_movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    assigned_hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    start_time = models.DateTimeField(null=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+
+    def add_time(self):
+        time = datetime(
+            year=self.start_time.year,
+            month=self.start_time.month,
+            day=self.start_time.day,
+            hour=self.start_time.hour,
+            minute=self.start_time.minute,
+            second=self.start_time.second,
+        )
+        return time + timedelta(minutes=self.assigned_movie.length)
+
+    def save(self, *args, **kwargs):
+        self.end_time = self.add_time()
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return format_html(
+            f"{self.assigned_movie.name}<br> Start time: {self.start_time.hour}:{self.start_time.minute}"
+        )
+
+
+class Reservation(models.Model):
+    seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
+    reservation_name = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    reserved_time = models.ForeignKey(PlayingTime, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        self.is_reserved = True
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return format_html(f"Name: {str(self.reservation_name)}<br> {str(self.seat)}")

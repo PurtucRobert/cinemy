@@ -1,0 +1,34 @@
+{%extends 'core/base.html' %} {% block title %}Select cinema {%endblock %}
+{%load static %} {% block mycss %} <link href={%static "css/cards_booking.css"%}
+rel="stylesheet" />{%endblock%} {%block content %}
+<div class="container-fluid bg-trasparent my-4 p-3" style="position: relative">
+  <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
+    {%for cinema in cinemas%}
+    <form action="" method="POST">
+      {%csrf_token%} {{form.as_p}}
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <img
+            src="https://www.cinemacity.ro/static/dam/jcr:c57b232e-7e50-49df-aa3f-1faf21bdc841/terms_and_conditions.jpg"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <div class="clearfix mb-3">
+              <span class="float-start badge rounded-pill bg-primary"
+                >{{cinema.name}}</span
+              >
+              <span class="float-end">{{cinema.city}}</span>
+            </div>
+            <h5 class="card-title">{{cinema.description}}</h5>
+            <div class="text-center my-4">
+              <a href="#" class="btn btn-primary rounded-pill">Select cinema</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    {%endfor%}
+  </div>
+</div>
+{%endblock %}
