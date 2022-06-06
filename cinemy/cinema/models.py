@@ -93,7 +93,6 @@ class PlayingTime(models.Model):
 
 class Reservation(models.Model):
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
-    is_reserved = models.BooleanField(default=False)
     reservation_name = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     reserved_time = models.ForeignKey(PlayingTime, on_delete=models.CASCADE)
 

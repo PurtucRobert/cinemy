@@ -9,6 +9,6 @@ from .models import Cinema
 @login_required()
 @ratelimit(key="ip", rate="30/m", block=True)
 def select_cinema(request):
-    cinemas = Cinema.objects.all()
     if request.method == "GET":
+        cinemas = Cinema.objects.all()
         return render(request, "cinema/select_cinema.html", {"cinemas": cinemas})
