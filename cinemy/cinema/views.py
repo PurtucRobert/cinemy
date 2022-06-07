@@ -91,7 +91,7 @@ def select_seats(request, pk):
                 )
             )
         try:
-            created_reservations = Reservation.objects.bulk_create(reservations)
+            Reservation.objects.bulk_create(reservations)
         except IntegrityError:
             messages.success(request, (f"Seat {seat} is already reserved"))
             return redirect(request.path)
