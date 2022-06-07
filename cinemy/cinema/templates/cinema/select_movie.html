@@ -1,0 +1,38 @@
+{%extends 'core/base.html' %} {% block title %}Book a ticket | Select movie
+{%endblock %} {%load static %} {% block mycss %} 
+{% load filter %}
+<link href={%static "css/cards_booking.css"%} rel="stylesheet" /> {%endblock%} {%block content %}
+<div class="container-fluid bg-trasparent my-4 p-3" style="position: relative">
+  <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
+    {%for movie in movies%}
+        <form action="", method="POST">
+        {% csrf_token %}
+        <input type="hidden" id="movie_id" name="movie_id" value={{movie.id}}> 
+        <div class="col">
+      <div class="card h-100 shadow-sm">
+        {% if movie.poster %}
+        <img
+          src="{{movie.poster.url}}"
+          class="card-img-top"
+          alt="..."
+        />
+        {% endif %}
+        <div class="card-body">
+          <div class="clearfix mb-3">
+            <span class="float-start badge rounded-pill bg-primary"
+              >{{movie.name}}</span
+            >
+            <span class="float-end">{{movie.length|format_time}}</span>
+          </div>
+          <h5 class="card-title">{{movie.description}}</h5>
+          <div class="text-center my-4">
+            <button class="btn btn-primary rounded-pill">Select movie</button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+    {%endfor%}
+  </div>
+</div>
+{%endblock %}

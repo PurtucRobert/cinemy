@@ -22,7 +22,11 @@ rel="stylesheet" />{%endblock%} {%block content %}
             </div>
             <h5 class="card-title">{{cinema.description}}</h5>
             <div class="text-center my-4">
-              <a href="#" class="btn btn-primary rounded-pill">Select cinema</a>
+              <a
+                href={% url 'select_movie' cinema_id=cinema.id %}
+                class="btn btn-primary rounded-pill"
+                >Select cinema</a
+              >
             </div>
           </div>
         </div>
