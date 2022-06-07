@@ -6,33 +6,31 @@
   <div class="cockpit">
     <h1>Screen</h1>
   </div>
-  <div class="exit exit--front fuselage">
-    
+  <div class="exit exit--front fuselage"/>
   </div>
   <ol class="cabin fuselage">
     <form method="POST">
     {% csrf_token %}
     {% for row in rows %}
-    <li class="row row--{{row}}">
-        <ol class="seats" type="A">
-        {% for letter in seats_letters %}
-            {% if row|add_str:letter|in_list:reserved_seats %}
-            <li class="seat">
-                <input type="checkbox" id="{{row}}{{letter}}" name="seats" value="{{row}}{{letter}}" disabled id="{{row}}{{letter}}"/>
-                <label for={{row}}{{letter}}>{{row}}{{letter}}</label>
-            </li>
-            {% else %}
-
-            <li class="seat">
-                <input type="checkbox" id="{{row}}{{letter}}" name="seats" value="{{row}}{{letter}}"/>
-                <label for={{row}}{{letter}}>{{row}}{{letter}}</label>
-            </li>
-            {% endif %}
-        {%endfor%}
-        </ol>
-    </li>
+        <li class="row row--{{row}}">
+            <ol class="seats" type="A">
+                {% for letter in seats_letters %}
+                    {% if row|add_str:letter|in_list:reserved_seats %}
+                        <li class="seat">
+                            <input type="checkbox" id="{{row}}{{letter}}" name="seats" value="{{row}}{{letter}}" disabled id="{{row}}{{letter}}"/>
+                            <label for={{row}}{{letter}}>{{row}}{{letter}}</label>
+                        </li>
+                    {% else %}
+                        <li class="seat">
+                            <input type="checkbox" id="{{row}}{{letter}}" name="seats" value="{{row}}{{letter}}"/>
+                            <label for={{row}}{{letter}}>{{row}}{{letter}}</label>
+                        </li>
+                    {% endif %}
+                {%endfor%}
+            </ol>
+        </li>
     {%endfor%}
-  <div class="exit exit--back fuselage">
+    <div class="exit exit--back fuselage">
     </div>
 </div>
 <div class="col-md-12 text-center">

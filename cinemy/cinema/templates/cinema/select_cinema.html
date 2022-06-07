@@ -15,9 +15,7 @@ rel="stylesheet" />{%endblock%} {%block content %}
           />
           <div class="card-body">
             <div class="clearfix mb-3">
-              <span class="float-start badge rounded-pill bg-primary"
-                >{{cinema.name}}</span
-              >
+              <span class="float-start badge rounded-pill bg-primary">{{cinema.name}}</span>
               <span class="float-end">{{cinema.city}}</span>
             </div>
             <h5 class="card-title">{{cinema.description}}</h5>
@@ -25,8 +23,7 @@ rel="stylesheet" />{%endblock%} {%block content %}
               <a
                 href={% url 'select_movie' cinema_id=cinema.id %}
                 class="btn btn-primary rounded-pill"
-                >Select cinema</a
-              >
+                >Select cinema</a>
             </div>
           </div>
         </div>
