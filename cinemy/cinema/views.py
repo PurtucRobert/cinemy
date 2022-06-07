@@ -83,8 +83,7 @@ def select_seats(request, pk):
                     reservation_name=User.objects.get(username=request.user),
                     reserved_time=PlayingTime.objects.get(pk=pk),
                 )
-            except IntegrityError as e:
-                print(f"Error: {e}")
+            except IntegrityError:
                 messages.success(request, (f"Seat {seat} is already reserved"))
                 return redirect(request.path)
         return redirect("front_page")
