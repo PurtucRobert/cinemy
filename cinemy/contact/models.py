@@ -9,3 +9,9 @@ class Contact(models.Model):
     phone_number = models.CharField(max_length=15)
     city = models.CharField(max_length=20)
     cinema = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ("name",)
