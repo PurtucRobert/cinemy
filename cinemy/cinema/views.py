@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Cinema, PlayingTime, Reservation, Seat, Hall
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
 
 
 @login_required()
@@ -74,16 +77,40 @@ def select_seats(request, pk):
         )
     if request.method == "POST":
         seats = request.POST.getlist("seats")
+        playing_time = PlayingTime.objects.get(pk=pk)
+        user = User.objects.get(username=request.user)
+        reservations = []
         for seat in seats:
-            try:
-                Reservation.objects.create(
+            reservations.append(
+                Reservation(
                     seat=Seat.objects.get(
-                        name=seat, hall=PlayingTime.objects.get(pk=pk).assigned_hall.id
+                        name=seat, hall=playing_time.assigned_hall.id
                     ),
-                    reservation_name=User.objects.get(username=request.user),
-                    reserved_time=PlayingTime.objects.get(pk=pk),
+                    reservation_name=user,
+                    reserved_time=playing_time,
                 )
-            except IntegrityError:
-                messages.success(request, (f"Seat {seat} is already reserved"))
-                return redirect(request.path)
+            )
+        try:
+            created_reservations = Reservation.objects.bulk_create(reservations)
+        except IntegrityError:
+            messages.success(request, (f"Seat {seat} is already reserved"))
+            return redirect(request.path)
+        else:
+            email_subject = f"Your booking for: {playing_time.assigned_movie.name} was completed successfully"
+            seats_names = " ".join(seats)
+            email_message = render_to_string(
+                "cinema/ticket_booking_email.html",
+                {
+                    "user": user,
+                    "seats": seats_names,
+                    "hall_name": playing_time.assigned_hall.name,
+                    "movie_name": playing_time.assigned_movie.name,
+                },
+            )
+            send_mail(
+                email_subject,
+                email_message,
+                settings.CONTACT_EMAIL,
+                [user.email],
+            )
         return redirect("front_page")
