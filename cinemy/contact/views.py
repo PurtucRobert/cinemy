@@ -15,6 +15,7 @@ def contact_page(request):
         form = ContactForm(request.POST)
         print(form)
         if form.is_valid():
+            form.save()
             try:
                 email_subject = f'New email from: {form.cleaned_data["from_email"]}: {form.cleaned_data["subject"]}'
                 email_message = form.cleaned_data["message"]
