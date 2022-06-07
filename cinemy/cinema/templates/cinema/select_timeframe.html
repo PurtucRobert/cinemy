@@ -1,0 +1,25 @@
+{%extends 'core/base.html' %} {% block title %}Book a ticket | Select playing time
+{%endblock %} {%load static %} {% block mycss %} 
+{% load filter %}
+<link href={%static "css/cards_booking.css"%} rel="stylesheet" /> {%endblock%} {%block content %}
+<div class="container-fluid bg-trasparent my-4 p-3" style="position: relative">
+  <div class="row row-cols-1 row-cols-xs-2 row-cols-sm-2 row-cols-lg-4 g-3">
+    {%for time_frame in time_frames%}
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+            <p class="text-center">Hall: {{time_frame.assigned_hall}}</p>
+          <div class="card-body">
+              <p class="">Start time: {{ time_frame.start_time}}</p>
+              <p class="">End time: {{time_frame.end_time}}</p>
+            <h5 class="card-title">{{movie.description}}</h5>
+            <div class="text-center my-4">
+              <a href="{%url 'select_seats' time_frame.id %}" class="btn btn-primary rounded-pill">Select time frame</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {%endfor%}
+  </div>
+</div>
+{%endblock %}
+

@@ -48,7 +48,7 @@ class Hall(models.Model):
         super().save(*args, **kwargs)
         for row in range(0, self.rows):
             for seat in range(1, self.seats_per_row + 1):
-                seat = Seat(hall=self, name=(chr(65 + row) + str(seat)))
+                seat = Seat(hall=self, name=str(seat) + (chr(65 + row)))
                 seat.save()
 
     def __str__(self):
@@ -58,7 +58,6 @@ class Hall(models.Model):
 class Seat(models.Model):
     hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
     name = models.CharField(max_length=4, default="A1")
-    is_reserved = models.BooleanField(default=False)
 
     def __str__(self):
         return format_html(f"Seat: {self.name}<br>Hall: {str(self.hall)}")
@@ -96,9 +95,7 @@ class Reservation(models.Model):
     reservation_name = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     reserved_time = models.ForeignKey(PlayingTime, on_delete=models.CASCADE)
 
-    def save(self, *args, **kwargs):
-        self.is_reserved = True
-        super().save(*args, **kwargs)
-
     def __str__(self):
-        return format_html(f"Name: {str(self.reservation_name)}<br> {str(self.seat)}")
+        return format_html(
+            f"Name: {str(self.reservation_name)}<br> {str(self.seat)}<br>Movie: {self.reserved_time.assigned_movie}"
+        )
