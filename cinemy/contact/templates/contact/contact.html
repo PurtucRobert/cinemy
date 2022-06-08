@@ -40,12 +40,7 @@
                                     <label for="city">City</label>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="cinema" name="cinema" placeholder="Cinema">
-                                    <label for="cinema">Cinema</label>
-                                </div>
-                            </div>
+
                             <div class="col-12">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject">
@@ -58,7 +53,7 @@
                                     <label for="message">Message</label>
                                 </div>
                             </div>
-                            <div class="col-12 text-center">
+                            <div class="col-md-6 text-center">
                             <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0">
                                 <span class="d-flex align-items-center">
                                 <i class="bi-chat-text-fill me-2"></i>
@@ -66,6 +61,30 @@
                                 </span>
                             </button>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <div class="dropdown">
+                                    <input type="hidden" class="form-control" id="cinema" name="cinema" placeholder="Cinema">
+                                    <button class="btn btn-primary rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Select cinema
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    {% for cinema in cinemas %}
+                                        <li><a class="dropdown-item" value={{cinema.id}}>{{cinema}}</a></li>
+                                    {% endfor %}
+                                    </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                            $(function(){
+                                $(".dropdown-menu").on('click', 'li a', function(){
+                                    console.log($(this)[0].attributes['value'].value)
+                                $("#dropdownMenuButton1").text($(this).text());
+                                $("#cinema").val($(this)[0].attributes['value'].value);
+                                });                  
+                            });
+                            </script>
                         </div>
                     </form>
                 </br>
@@ -84,3 +103,5 @@
     </div>
 </div>
 {% endblock %}
+
+
