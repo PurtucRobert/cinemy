@@ -1,4 +1,5 @@
 from django.db import models
+from cinema.models import Cinema
 
 
 class Contact(models.Model):
@@ -8,10 +9,10 @@ class Contact(models.Model):
     message = models.CharField(max_length=500, null=False)
     phone_number = models.CharField(max_length=15)
     city = models.CharField(max_length=20)
-    cinema = models.CharField(max_length=40)
+    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.cinema.name
 
     class Meta:
         ordering = ("name",)
