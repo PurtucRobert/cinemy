@@ -64,14 +64,14 @@ def select_seats(request, pk):
         )
         reserved_seats = [item.seat.name for item in reservations]
         seats_letters = []
-        for i in range(65, 65 + hall.seats_per_row):
+        for i in range(65, 65 + hall.rows):
             seats_letters.append(chr(i))
         return render(
             request,
             "cinema/select_seats.html",
             {
                 "reserved_seats": reserved_seats,
-                "rows": range(1, hall.rows + 1),
+                "rows": list(range(1, hall.seats_per_row + 1)),
                 "seats_letters": seats_letters,
             },
         )
