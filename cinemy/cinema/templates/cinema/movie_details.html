@@ -1,13 +1,10 @@
-{% extends "core/base.html" %} {% block title %} Front Page {% endblock %}
+{% extends "core/base.html" %} {% block title %} {{movie.name}} {% endblock %}
 {%load static %} {% block mycss %} <link href={%static "css/cards.css" %}
 rel="stylesheet" />{%endblock%} {%block content%}
 {% load filter %}
 <section class="light">
   <div class="container py-2">
-    <div class="h1 text-center text-dark" id="pageHeaderTitle">
-      Movies currently playing
-    </div>
-    {% for movie in movies %}
+
     <article class="postcard light blue">
       <a class="postcard__img_link" href="#">
         {% if movie.poster %}
@@ -19,9 +16,11 @@ rel="stylesheet" />{%endblock%} {%block content%}
         {%endif%}
       </a>
       <div class="postcard__text t-dark">
-        <h1 class="postcard__title blue"><a href="{% url 'movie_detail' movie.id %}" style="text-decoration:none">{{ movie.name }}</a></h1>
+        <h1 class="postcard__title blue">{{ movie.name }}</h1>
         <div class="postcard__subtitle small">
+          <time datetime="2020-05-25 12:00:00">
             <i class="fas fa-calendar-alt mr-2"></i>  Available starting: {{movie.available_from}}
+          </time>
         </div>
         <div class="postcard__bar"></div>
         <div class="postcard__preview-txt">
@@ -36,23 +35,11 @@ rel="stylesheet" />{%endblock%} {%block content%}
         </ul>
       </div>
     </article>
-    {%endfor%}
-    {% if movies.has_next %}
-        <a class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0 float-end" href="?page={{movies.next_page_number}}">
-            <span class="d-flex align-items-center">
-              <i class="fa-solid fa-arrow-right"></i>
-              <span class="small"></span>
-            </span>
-        </a>
-    {% endif %}
-    {% if movies.has_previous %}
-        <a class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" href="?page={{movies.previous_page_number}}">
-            <span class="d-flex align-items-center">
-              <i class="fa-solid fa-arrow-left"></i>
-              <span class="small"></span>
-            </span>
-        </a>
-    {% endif %}
+    <div class="text-center">
+      <div class="embed-responsive ratio ratio-16x9">
+        <iframe class="embed-responsive-item rounded-top" src={{movie.trailer_url|get_url}} allowfullscreen></iframe>
+        </div>
+    </div>
   </div>
 </section>
 {% endblock %}

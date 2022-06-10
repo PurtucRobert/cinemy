@@ -1,5 +1,11 @@
 from django.urls import path
-from cinema.views import select_cinema, select_movie, select_timeframe, select_seats
+from cinema.views import (
+    select_cinema,
+    select_movie,
+    select_timeframe,
+    select_seats,
+    movie_detail,
+)
 
 urlpatterns = [
     path("select_cinema/", select_cinema, name="select_cinema"),
@@ -10,4 +16,5 @@ urlpatterns = [
         name="select_timeframe",
     ),
     path("select_seats/<pk>", select_seats, name="select_seats"),
+    path("movie_detail/<pk>", movie_detail, name="movie_detail"),
 ]

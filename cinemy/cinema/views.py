@@ -1,8 +1,8 @@
 from django.db import IntegrityError
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
-from .models import Cinema, PlayingTime, Reservation, Seat, Hall
+from .models import Cinema, Movie, PlayingTime, Reservation, Seat, Hall
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -114,3 +114,11 @@ def select_seats(request, pk):
                 [user.email],
             )
         return redirect("front_page")
+
+
+@login_required()
+@ratelimit(key="ip", rate="30/m", block=True)
+def movie_detail(request, pk):
+    if request.method == "GET":
+        movie = get_object_or_404(Movie, id=pk)
+        return render(request, "cinema/movie_details.html", {"movie": movie})
