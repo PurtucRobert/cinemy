@@ -17,3 +17,8 @@ def add_str(arg1, arg2):
 def format_time(input):
     input = int(input)
     return str(input // 60) + "h:" + str(input % 60) + "m"
+
+
+@register.filter(name="get_url")
+def get_url(input):
+    return "https://www.youtube.com/embed/" + input.split("=")[-1]

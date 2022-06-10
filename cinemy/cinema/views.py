@@ -2,12 +2,14 @@ from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
-from .models import Cinema, PlayingTime, Reservation, Seat, Hall
+from .models import Cinema, Movie, PlayingTime, Reservation, Seat, Hall
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.views.generic import DetailView
+from django.utils.decorators import method_decorator
 
 
 @login_required()
@@ -114,3 +116,9 @@ def select_seats(request, pk):
                 [user.email],
             )
         return redirect("front_page")
+
+
+@method_decorator(ratelimit(key="ip", rate="30/m", block=True), name="get")
+class MovieDetail(DetailView):
+    model = Movie
+    template_name = "cinema/movie_details.html"

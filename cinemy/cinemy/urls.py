@@ -24,5 +24,5 @@ urlpatterns = [
     path("", front_page, name="front_page"),
     path("contact/", include("contact.urls")),
     path("user/", include("login.urls")),
-    path("book_ticket/", include("cinema.urls")),
+    path("", include("cinema.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
