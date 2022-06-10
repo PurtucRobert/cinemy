@@ -9,7 +9,11 @@ rel="stylesheet" />{%endblock%} {%block content %}
       <div class="col">
         <div class="card h-100 shadow-sm">
           <img
-            src="https://www.cinemacity.ro/static/dam/jcr:c57b232e-7e50-49df-aa3f-1faf21bdc841/terms_and_conditions.jpg"
+            {% if cinema.logo %}
+            src = {{cinema.logo.url}}
+            {% else %}
+            src="https://img.freepik.com/free-vector/cinema-logo-with-popcorn_23-2147494040.jpg"
+            {% endif %}
             class="card-img-top"
             alt="..."
           />

@@ -32,6 +32,7 @@ class Cinema(models.Model):
     address = models.CharField(max_length=200)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
+    logo = models.ImageField(upload_to="cinema_logo/", blank=True, null=True)
 
     def __str__(self):
         return " - ".join((self.name, self.city))
