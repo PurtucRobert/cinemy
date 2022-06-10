@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 class AuthenticationTest(TestCase):
     def test_login(self):
         User = get_user_model()
-        user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
         response = self.client.get("/", follow=True)
         self.assertEqual(
@@ -14,7 +14,7 @@ class AuthenticationTest(TestCase):
 
     def test_logout(self):
         User = get_user_model()
-        user = User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
+        User.objects.create_user("temporary", "temporary@gmail.com", "temporary")
         self.client.login(username="temporary", password="temporary")
         self.client.logout()
         response = self.client.get("")
