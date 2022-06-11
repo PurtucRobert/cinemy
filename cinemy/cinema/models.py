@@ -45,13 +45,6 @@ class Hall(models.Model):
     rows = models.IntegerField(default=15)
     seats_per_row = models.IntegerField(default=20)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        for row in range(0, self.rows):
-            for seat in range(1, self.seats_per_row + 1):
-                seat = Seat(hall=self, name=str(seat) + (chr(65 + row)))
-                seat.save()
-
     def __str__(self):
         return " - ".join((self.name, str(self.cinema)))
 
@@ -100,3 +93,12 @@ class Reservation(models.Model):
         return format_html(
             f"Name: {str(self.reservation_name)}<br> {str(self.seat)}<br>Movie: {self.reserved_time.assigned_movie}"
         )
+
+
+def generate_seats(rows, seats_per_row):
+    seats = []
+    for row in range(0, rows):
+        for seat_letter in range(1, seats_per_row + 1):
+            seat = Seat(name=str(seat_letter) + (chr(65 + row)))
+            seats.append(seat)
+    return seats
