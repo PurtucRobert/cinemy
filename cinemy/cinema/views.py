@@ -121,4 +121,3 @@ def select_seats(request, pk):
 @method_decorator(ratelimit(key="ip", rate="30/m", block=True), name="get")
 class MovieDetail(DetailView):
     model = Movie
-    template_name = "cinema/movie_details.html"
