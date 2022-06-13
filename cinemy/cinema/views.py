@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from ratelimit.decorators import ratelimit
 from django.contrib.auth.decorators import login_required
@@ -10,6 +11,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.views.generic import DetailView
 from django.utils.decorators import method_decorator
+import csv
 
 
 @login_required()
@@ -122,3 +124,28 @@ def select_seats(request, pk):
 class MovieDetail(DetailView):
     model = Movie
     template_name = "cinema/movie_details.html"
+
+
+@login_required()
+@ratelimit(key="ip", rate="30/m", block=True)
+def reservations_per_user(request, pk):
+    user = User.objects.get(pk=pk)
+    reservations = Reservation.objects.filter(reservation_name=user)
+    file_name = f"reservations_{user.username}.csv"
+    response = HttpResponse(
+        headers={"Content-Disposition": f"attachment; filename={file_name}"},
+        content_type="text/csv",
+    )
+    writer = csv.writer(response)
+    writer.writerow(["User", "Movie", "Start time", "Hall", "Seat"])
+    for reservation in reservations:
+        writer.writerow(
+            [
+                reservation.reservation_name,
+                reservation.reserved_time.assigned_movie.name,
+                reservation.reserved_time.start_time,
+                reservation.reserved_time.assigned_hall.name,
+                reservation.seat.name,
+            ]
+        )
+    return response
