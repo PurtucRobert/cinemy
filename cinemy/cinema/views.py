@@ -131,21 +131,29 @@ class MovieDetail(DetailView):
 def reservations_per_user(request, pk):
     user = User.objects.get(pk=pk)
     reservations = Reservation.objects.filter(reservation_name=user)
-    file_name = f"reservations_{user.username}.csv"
-    response = HttpResponse(
-        headers={"Content-Disposition": f"attachment; filename={file_name}"},
-        content_type="text/csv",
-    )
-    writer = csv.writer(response)
-    writer.writerow(["User", "Movie", "Start time", "Hall", "Seat"])
-    for reservation in reservations:
-        writer.writerow(
-            [
-                reservation.reservation_name,
-                reservation.reserved_time.assigned_movie.name,
-                reservation.reserved_time.start_time,
-                reservation.reserved_time.assigned_hall.name,
-                reservation.seat.name,
-            ]
+    if request.method == "GET":
+        return render(
+            request, "cinema/reservations.html", {"reservations": reservations}
         )
-    return response
+    if request.method == "POST":
+        file_name = f"reservations_{user.username}.csv"
+        response = HttpResponse(
+            headers={"Content-Disposition": f"attachment; filename={file_name}"},
+            content_type="text/csv",
+        )
+        writer = csv.writer(response)
+        writer.writerow(
+            ["Reservation ID", "User", "Movie", "Start time", "Hall", "Seat"]
+        )
+        for reservation in reservations:
+            writer.writerow(
+                [
+                    reservation.id,
+                    reservation.reservation_name,
+                    reservation.reserved_time.assigned_movie.name,
+                    reservation.reserved_time.start_time,
+                    reservation.reserved_time.assigned_hall.name,
+                    reservation.seat.name,
+                ]
+            )
+        return response

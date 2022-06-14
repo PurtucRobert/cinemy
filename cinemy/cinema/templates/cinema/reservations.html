@@ -1,0 +1,46 @@
+{% extends "core/base.html" %} {% block title %}Reservations {% endblock %}
+{%load static %} 
+{%block content%}
+<br>
+<div class="container py-2">
+    <div class="h1 text-center text-dark" id="pageHeaderTitle">
+        Your reservations
+    </div>
+</div>
+<table class="table table-sm table-bordered border-primary table-hover">
+  <thead class="table-primary">
+    <tr>
+      <th scope="col">Reservation ID</th>
+      <th scope="col">User</th>
+      <th scope="col">Movie</th>
+      <th scope="col">Start time</th>
+      <th scope="col">Hall</th>
+      <th scope="col">Seat</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for reservation in reservations%}
+    <tr>
+      <th scope="row">{{reservation.id}}</th>
+      <td>{{reservation.reservation_name}}</td>
+      <td>{{reservation.reserved_time.assigned_movie.name}}</td>
+      <td>{{reservation.reserved_time.start_time}}</td>
+      <td>{{reservation.reserved_time.assigned_hall.name}}</td>
+      <td>{{reservation.seat.name}}</td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+<form method="POST">
+    {% csrf_token %}
+    <div class="text-center">
+        <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0">
+            <span class="d-flex align-items-center">
+                <i class="bi-chat-text-fill me-2"></i>
+                <span class="small">Download reservations</span>
+            </span>
+        </button>
+    </div>
+    <br>
+</form>
+{%endblock%}
