@@ -9,6 +9,7 @@ from django.urls import path
 from cinema.models import Movie, Cinema, Hall, Seat, Reservation, PlayingTime
 from nested_inline.admin import NestedTabularInline, NestedModelAdmin
 from io import TextIOWrapper
+from django.contrib import messages
 
 
 class ReservationInline(NestedTabularInline):
@@ -79,10 +80,11 @@ class MovieAdmin(NestedModelAdmin):
                         created_movie.poster.save(
                             name, ContentFile(response.content), save=False
                         )
-                except requests.exceptions.MissingSchema:
-                    pass
-                except IntegrityError:
-                    pass
+                except (requests.exceptions.MissingSchema, IntegrityError) as e:
+                    messages.error(
+                        request=request,
+                        message=f"\nFailed to add movie: {movie_from_csv['name']} to the DB due to following error: {e}",
+                    )
                 else:
                     movies.append(created_movie)
             Movie.objects.bulk_create(movies)
