@@ -50,7 +50,9 @@ class Hall(models.Model):
 
 
 class Seat(models.Model):
-    hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    hall = models.ForeignKey(
+        Hall, on_delete=models.CASCADE, related_name="seats", null=True
+    )
     name = models.CharField(max_length=4, default="A1")
 
     def __str__(self):
