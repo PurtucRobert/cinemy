@@ -35,13 +35,10 @@ def auth(request):
 
 
 @ratelimit(key="ip", rate="30/m", block=True)
-def signup(request):
+def signup(request, uidb64):
+    uidb64_padded = uidb64 + "=" * (-len(uidb64) % 4)
+    to_email = force_str(urlsafe_b64decode(uidb64_padded))
     if request.method == "POST":
-        try:
-            validate_email(request.POST["email"])
-        except ValidationError:
-            messages.success(request, ("Email address is incorrect"))
-            return redirect("signup")
 
         form = SignupForm(request.POST)
         if form.is_valid():
@@ -59,8 +56,6 @@ def signup(request):
                     "token": account_activation_token.make_token(user),
                 },
             )
-            print(message)
-            to_email = form.cleaned_data.get("email")
             send_mail(mail_subject, message, settings.CONTACT_EMAIL, [to_email])
             messages.success(
                 request,
@@ -75,7 +70,7 @@ def signup(request):
                 else:
                     messages.success(request, f"\n - {errors_dict[field]}")
 
-    return render(request, "login/register.html")
+    return render(request, "login/register.html", {"email": to_email})
 
 
 def activate(request, uidb64, token):
@@ -95,3 +90,37 @@ def activate(request, uidb64, token):
         )
     else:
         return HttpResponse("Activation link is invalid!")
+
+
+@ratelimit(key="ip", rate="30/m", block=True)
+def pre_signup(request):
+    if request.method == "POST":
+        try:
+            validate_email(request.POST["email"])
+        except ValidationError:
+            messages.error(request, ("Email address is incorrect"))
+            return redirect("pre_signup")
+        else:
+            email = request.POST["email"]
+            encoded_email = urlsafe_base64_encode(force_bytes(email))
+            current_site = get_current_site(request)
+            message = render_to_string(
+                "login/acc_check_email.html",
+                {
+                    "user": email,
+                    "domain": current_site.domain,
+                    "uid": encoded_email,
+                },
+            )
+            send_mail(
+                "Continue registration on CineMY",
+                message,
+                settings.CONTACT_EMAIL,
+                [email],
+            )
+            messages.success(
+                request, "Please check your email in order to continue registration "
+            )
+            return redirect("pre_signup")
+    if request.method == "GET":
+        return render(request, "login/pre_register.html")
