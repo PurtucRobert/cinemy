@@ -16,6 +16,7 @@
       <th scope="col">Start time</th>
       <th scope="col">Hall</th>
       <th scope="col">Seat</th>
+      <th scope="col">Confirmed</th>
     </tr>
   </thead>
   <tbody>
@@ -27,6 +28,15 @@
       <td>{{reservation.reserved_time.start_time}}</td>
       <td>{{reservation.reserved_time.assigned_hall.name}}</td>
       <td>{{reservation.seat.name}}</td>
+      <td>
+        <div class="custom-control custom-checkbox">
+          {% if reservation.confirmed %}
+            <input type="checkbox" class="custom-control-input" id="customCheck1" checked disabled>
+          {% else %}
+            <input type="checkbox" class="custom-control-input" id="customCheck1" disabled>
+          {% endif %}
+        </div>
+      </td>
     </tr>
     {%endfor%}
   </tbody>
