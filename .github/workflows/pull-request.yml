@@ -13,4 +13,4 @@ jobs:
         destination_branch: "main"
         github_token: ${{ secrets.REPO_SCOPED_TOKEN }}
         pr_label: "automerge"
-        pr_reviewer: "maxinasa,drejleeo"
+        pr_reviewer: "drejleeo"
