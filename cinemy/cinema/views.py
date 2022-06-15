@@ -134,7 +134,7 @@ def reservations_per_user(request, pk):
         return render(
             request, "cinema/reservations.html", {"reservations": reservations}
         )
-    if request.method == "POST":
+    if request.method == "POST" and "download_reservations" in request.POST:
         file_name = f"reservations_{user.username}.csv"
         response = HttpResponse(
             headers={"Content-Disposition": f"attachment; filename={file_name}"},
@@ -156,3 +156,10 @@ def reservations_per_user(request, pk):
                 ]
             )
         return response
+
+    elif request.method == "POST" and "confirm_reservations" in request.POST:
+        checked_reservations = request.POST.getlist("reservations_check")
+        Reservation.objects.filter(pk__in=checked_reservations).update(confirmed=True)
+        return render(
+            request, "cinema/reservations.html", {"reservations": reservations}
+        )
