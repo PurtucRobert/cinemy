@@ -11,6 +11,6 @@ jobs:
       uses: repo-sync/pull-request@v2
       with:
         destination_branch: "main"
-        github_token: ${{ secrets.PAT }}
+        github_token: ${{ secrets.pat }}
         pr_label: "automerge"
         pr_reviewer: "maxinasa,drejleeo"
