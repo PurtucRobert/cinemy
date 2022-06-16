@@ -15,11 +15,3 @@ def mark_unconfirmed_reservations_as_expired():
     ).filter(time_min__lte=timedelta(minutes=30))
     for playing_time in playing_times:
         playing_time.reservations.filter(confirmed=False).update(expired=True)
-
-
-def clean_passed_playing_times():
-    """
-    This function will clean all the playing times
-    of a movie that passed
-    """
-    PlayingTime.objects.filter(start_time__lte=timezone.now()).delete()
