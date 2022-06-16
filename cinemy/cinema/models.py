@@ -93,6 +93,7 @@ class Reservation(models.Model):
         PlayingTime, on_delete=models.CASCADE, related_name="reservations"
     )
     confirmed = models.BooleanField(default=False)
+    expired = models.BooleanField(default=False)
 
     def __str__(self):
         return format_html(

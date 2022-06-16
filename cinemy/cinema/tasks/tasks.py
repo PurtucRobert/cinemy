@@ -4,7 +4,7 @@ from django.db.models import F
 from datetime import timedelta
 
 
-def clean_unconfirmed_reservations():
+def mark_unconfirmed_reservations_as_expired():
     """
     This function will clean all the unconfirmed reservations
     at 30 minutes prior to starting the movie
@@ -14,7 +14,7 @@ def clean_unconfirmed_reservations():
         time_min=(time_now - F("start_time"))
     ).filter(time_min__lte=timedelta(minutes=30))
     for playing_time in playing_times:
-        playing_time.reservations.filter(confirmed=False).delete()
+        playing_time.reservations.filter(confirmed=False).update(expired=True)
 
 
 def clean_passed_playing_times():
