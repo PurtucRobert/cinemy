@@ -11,7 +11,7 @@ def mark_unconfirmed_reservations_as_expired():
     """
     time_now = timezone.now()
     playing_times = PlayingTime.objects.annotate(
-        time_min=(time_now - F("start_time"))
+        time_min=(F("start_time") - time_now)
     ).filter(time_min__lte=timedelta(minutes=30))
     for playing_time in playing_times:
         playing_time.reservations.filter(confirmed=False).update(expired=True)

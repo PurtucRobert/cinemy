@@ -34,11 +34,11 @@
       <td>
         <div class="custom-control custom-checkbox">
           {% if reservation.confirmed %}
-            <input type="checkbox" class="custom-control-input" id="reservations_check" value="reservations_check" checked disabled>
+            <input type="checkbox" class="custom-control-input" id="reservations_check" name="reservations_check" checked disabled>
           {% elif reservation.expired %}
-            <input type="checkbox" class="custom-control-input" id="reservations_check" value="reservations_check" disabled>
+            <input type="checkbox" class="custom-control-input" id="reservations_check" name="reservations_check" disabled>
           {% else %}
-            <input type="checkbox" class="custom-control-input" id="reservations_check" value="reservations_check">
+            <input type="checkbox" class="custom-control-input" id="reservations_check" name="reservations_check" value={{reservation.id}}>
           {% endif %}
         </div>
       </td>
