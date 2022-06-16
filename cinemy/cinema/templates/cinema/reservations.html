@@ -9,6 +9,7 @@
 </div>
 
 <form method="POST">
+{% csrf_token %}
 <table class="table table-sm table-bordered border-primary table-hover">
   <thead class="table-primary">
     <tr>
@@ -33,11 +34,11 @@
       <td>
         <div class="custom-control custom-checkbox">
           {% if reservation.confirmed %}
-            <input type="checkbox" class="custom-control-input" id="customCheck1" checked disabled>
+            <input type="checkbox" class="custom-control-input" id="reservations_check" value="reservations_check" checked disabled>
           {% elif reservation.expired %}
-            <input type="checkbox" class="custom-control-input" id="customCheck1" disabled>
+            <input type="checkbox" class="custom-control-input" id="reservations_check" value="reservations_check" disabled>
           {% else %}
-            <input type="checkbox" class="custom-control-input" id="customCheck1">
+            <input type="checkbox" class="custom-control-input" id="reservations_check" value="reservations_check">
           {% endif %}
         </div>
       </td>
@@ -45,8 +46,8 @@
     {%endfor%}
   </tbody>
 </table>
-{% csrf_token %}
 <div class="text-center">
+    {% if reservations %}
     <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" name="download_reservations">
         <span class="d-flex align-items-center">
             <i class="bi-chat-text-fill me-2"></i>
@@ -59,6 +60,7 @@
             <span class="small">Confirm selected reservations</span>
         </span>
     </button>
+    {% endif %}
 </div>
 <br>
 </form>
