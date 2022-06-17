@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.views.generic import DetailView
 from django.utils.decorators import method_decorator
 import csv
+from django.utils import timezone
 
 
 @login_required()
@@ -27,7 +28,8 @@ def select_cinema(request):
 def select_movie(request, cinema_id):
     if request.method == "GET":
         movie_time_frames = PlayingTime.objects.filter(
-            assigned_hall__in=Hall.objects.filter(cinema=cinema_id)
+            assigned_hall__in=Hall.objects.filter(cinema=cinema_id),
+            start_time__gt=timezone.now(),
         )
         if movie_time_frames:
             movies = set(
@@ -52,6 +54,7 @@ def select_timeframe(request, movie_id, cinema_id):
         time_frames = PlayingTime.objects.filter(
             assigned_movie=movie_id,
             assigned_hall__in=Hall.objects.filter(cinema=cinema_id),
+            start_time__gt=timezone.now(),
         )
         return render(
             request, "cinema/select_timeframe.html", {"time_frames": time_frames}
