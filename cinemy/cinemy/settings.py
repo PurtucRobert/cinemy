@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "login",
     "cinema",
     "nested_inline",
+    "django_q",
 ]
 
 MIDDLEWARE = [
@@ -154,3 +155,11 @@ LOGOUT_URL = "/"
 # Settings related to media
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media/"
+
+# Q Cluster configuratio needed for task scheduling
+Q_CLUSTER = {
+    "name": "cinema",
+    "retry": 10,
+    "timeout": 5,
+    "orm": "default",
+}

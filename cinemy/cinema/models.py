@@ -89,8 +89,11 @@ class PlayingTime(models.Model):
 class Reservation(models.Model):
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
     reservation_name = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    reserved_time = models.ForeignKey(PlayingTime, on_delete=models.CASCADE)
+    reserved_time = models.ForeignKey(
+        PlayingTime, on_delete=models.CASCADE, related_name="reservations"
+    )
     confirmed = models.BooleanField(default=False)
+    expired = models.BooleanField(default=False)
 
     def __str__(self):
         return format_html(
