@@ -6,6 +6,7 @@ from cinema.views import (
     select_seats,
     MovieDetail,
     reservations_per_user,
+    confirm_reservations,
 )
 
 urlpatterns = [
@@ -21,4 +22,9 @@ urlpatterns = [
     path("book_a_ticket/select_seats/<pk>", select_seats, name="select_seats"),
     path("movie_detail/<pk>", MovieDetail.as_view(), name="movie_detail"),
     path("reservations/<pk>", reservations_per_user, name="reservations_per_user"),
+    path(
+        "confirm_reservation/<slug:uidb64>/",
+        confirm_reservations,
+        name="confirm_reservations",
+    ),
 ]

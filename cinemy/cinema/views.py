@@ -13,6 +13,10 @@ from django.views.generic import DetailView
 from django.utils.decorators import method_decorator
 import csv
 from django.utils import timezone
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.sites.shortcuts import get_current_site
+from base64 import urlsafe_b64decode
 
 
 @login_required()
@@ -98,17 +102,39 @@ def select_seats(request, pk):
                 )
             )
         try:
+            existing_ids = list(
+                Reservation.objects.filter(
+                    reserved_time=playing_time, reservation_name=user
+                ).values_list("id", flat=True)
+            )
             Reservation.objects.bulk_create(reservations)
+            new_ids = list(
+                Reservation.objects.exclude(id__in=existing_ids).values_list(
+                    "id", flat=True
+                )
+            )
+            ids_string = ",".join([str(res_id) for res_id in new_ids])
+            encoded_ids = urlsafe_base64_encode(force_bytes(ids_string))
         except IntegrityError:
             messages.success(request, (f"Seat {seat} is already reserved"))
             return redirect(request.path)
         else:
+            new_ids = list(
+                Reservation.objects.exclude(id__in=existing_ids).values_list(
+                    "id", flat=True
+                )
+            )
+            ids_string = ",".join([str(res_id) for res_id in new_ids])
+            encoded_ids = urlsafe_base64_encode(force_bytes(ids_string))
             email_subject = f"Your booking for: {playing_time.assigned_movie.name} was completed successfully"
             seats_names = " ".join(seats)
+            current_site = get_current_site(request)
             email_message = render_to_string(
                 "cinema/ticket_booking_email.html",
                 {
                     "user": user,
+                    "domain": current_site.domain,
+                    "uid": encoded_ids,
                     "seats": seats_names,
                     "hall_name": playing_time.assigned_hall.name,
                     "movie_name": playing_time.assigned_movie.name,
@@ -166,3 +192,12 @@ def reservations_per_user(request, pk):
         return render(
             request, "cinema/reservations.html", {"reservations": reservations}
         )
+
+
+@login_required()
+@ratelimit(key="ip", rate="30/m", block=True)
+def confirm_reservations(request, uidb64):
+    uidb64_padded = uidb64 + "=" * (-len(uidb64) % 4)
+    ids = force_str(urlsafe_b64decode(uidb64_padded)).split(",")
+    Reservation.objects.filter(id__in=ids).update(confirmed=True)
+    return HttpResponse("Thank you for confirming your reservations")
