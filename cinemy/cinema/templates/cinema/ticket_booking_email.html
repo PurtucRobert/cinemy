@@ -1,6 +1,8 @@
 Dear {{ user.username }},
 
-You have successfully booked the following seats: {{seats}} in hall: {{hall_name}} for the movie: {{movie_name}}. Have a good time!
+You have successfully booked the following seats: {{seats}} in hall: {{hall_name}} for the movie: {{movie_name}}. 
+Please confirm the booking by clicking the following URL: http://{{ domain }}{% url 'confirm_reservations' uidb64=uid %}
+Have a good time!
 
 Kind regards,
 CineMY team
