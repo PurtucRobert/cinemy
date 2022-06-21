@@ -1,5 +1,5 @@
 from ratelimit.decorators import ratelimit
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.models import User
 from newsletter.forms import NewsletterForm
 from newsletter.models import Newsletter
