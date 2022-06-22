@@ -41,7 +41,7 @@ def signup(request, uidb64):
         form = SignupForm(request.POST)
         try:
             user = User.objects.get(email=to_email)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
         if user is None and form.is_valid():
             user = form.save()
