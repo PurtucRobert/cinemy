@@ -1,6 +1,5 @@
 from base64 import urlsafe_b64decode
 from django.conf import settings
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from login.forms import SignupForm
 from django.contrib.auth import authenticate
@@ -15,8 +14,8 @@ from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
 from login.tokens import account_activation_token
 from django.utils.encoding import force_str
-from django.contrib.auth import get_user_model
 from ratelimit.decorators import ratelimit
+from django.contrib.auth.models import User
 
 
 @ratelimit(key="ip", rate="30/m", block=True)
@@ -39,27 +38,23 @@ def signup(request, uidb64):
     uidb64_padded = uidb64 + "=" * (-len(uidb64) % 4)
     to_email = force_str(urlsafe_b64decode(uidb64_padded))
     if request.method == "POST":
-
         form = SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            current_site = get_current_site(request)
-            mail_subject = "Activate your CineMY account"
-            message = render_to_string(
-                "login/acc_active_email.html",
-                {
-                    "user": user,
-                    "domain": current_site.domain,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "token": account_activation_token.make_token(user),
-                },
+        try:
+            user = User.objects.get(email=to_email)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is None and form.is_valid():
+            user = form.save()
+            message = f"Dear {user.username},\n\nYour account has been created successfully.\n\nKind regards,\nCineMY team"
+            send_mail(
+                "CineMY account creation was successful",
+                message,
+                settings.CONTACT_EMAIL,
+                [to_email],
             )
-            send_mail(mail_subject, message, settings.CONTACT_EMAIL, [to_email])
             messages.success(
                 request,
-                "Please confirm your email address to complete the registration",
+                "Your account has been created successfully",
             )
         else:
             errors_dict = dict(form.errors)
@@ -73,35 +68,16 @@ def signup(request, uidb64):
     return render(request, "login/register.html", {"email": to_email})
 
 
-def activate(request, uidb64, token):
-    try:
-        uidb64_padded = uidb64 + "=" * (-len(uidb64) % 4)
-        uid = force_str(urlsafe_b64decode(uidb64_padded))
-        User = get_user_model()
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        login(request, user)
-        return HttpResponse(
-            "Thank you for your email confirmation. Now you can login your account."
-        )
-    else:
-        return HttpResponse("Activation link is invalid!")
-
-
 @ratelimit(key="ip", rate="30/m", block=True)
 def pre_signup(request):
     if request.method == "POST":
         try:
-            validate_email(request.POST["email"])
+            email = request.POST["email"]
+            validate_email(email)
         except ValidationError:
-            messages.error(request, ("Email address is incorrect"))
+            messages.error(request, ("Email address is not valid"))
             return redirect("pre_signup")
         else:
-            email = request.POST["email"]
             encoded_email = urlsafe_base64_encode(force_bytes(email))
             current_site = get_current_site(request)
             message = render_to_string(
