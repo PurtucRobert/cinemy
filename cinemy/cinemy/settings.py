@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "nested_inline",
     "django_q",
     "newsletter",
+    "import_movies",
 ]
 
 MIDDLEWARE = [

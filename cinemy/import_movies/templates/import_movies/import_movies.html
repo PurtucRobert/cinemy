@@ -1,0 +1,54 @@
+{%extends 'core/base.html'%} {% block title %}Import movies{% endblock %} 
+{%block content %}
+
+<body>
+	<section class="h-100">
+            <div class="container-xxl py-5">
+                <div class="row justify-content-sm-center h-100">
+                    <div class="col-md-9">
+                        <div class="card shadow-lg ">
+                            <div class="card-body p-5 ">
+                                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                                    <h2 class="text-primary-gradient fw-medium">Import movies <i class="fa-solid fa-file-zipper" aria-hidden="true" style="color:#0d6efd"></i></h2>
+                                </div>
+                                <br>
+                                <form method="POST" class="needs-validation" novalidate="" autocomplete="off" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {{ form.as_p}}
+                                    <div class="mb-3">
+                                        <label class="mb-2 text-muted" for="title">Title</label>
+                                        <input id="title" type="text" class="form-control" name="title" value="" required autofocus>
+                                        <div class="invalid-feedback">
+                                            Email is invalid
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="file" class="form-label">Please select the ZIP file containing the movies CSV and images</label>
+                                        <input class="form-control form-control-lg" id="file" name="file" type="file">
+                                    </div>
+                                    <br>
+                                    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                                        <button type="submit" class="btn btn-primary rounded-pill ms-auto">
+                                           Import movies
+                                        </button>
+                                    </div>
+                                </form>
+                                <br>
+                                {% if messages %}
+                                    <div class="alert alert-primary alert-dismissable text-center">
+                                    {% for msg in messages %}
+                                        <p>{{msg.message}}
+                                    {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+	</section>
+
+</body>
+</html>
+
+{% endblock %}

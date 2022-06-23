@@ -11,7 +11,11 @@ def hall_creation_handler(instance, **kwargs):
     instance.seats.add(*generated_seats, bulk=False)
 
 
-@receiver(post_save, sender=Movie)
-def movie_adding_handler(instance, **kwargs):
-    emails = Newsletter.objects.values_list("email", flat=True)
-    send_newsletter(instance, emails=emails)
+@receiver(
+    post_save,
+    sender=Movie,
+)
+def movie_adding_handler(instance, created, **kwargs):
+    if created:
+        emails = Newsletter.objects.values_list("email", flat=True)
+        send_newsletter(instance, emails=emails)

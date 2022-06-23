@@ -78,6 +78,10 @@
               <a class="nav-link me-lg-3" href="{% url 'select_cinema' %}">Book a ticket</a>
             </li>
             <li class="nav-item">
+              {% if user.is_staff %}
+                <a class="nav-link me-lg-3" href={% url 'import_movies' %}>Import movies</a>
+              {% endif %}
+            </li>
               {% if user.is_authenticated %}
                 <a class="nav-link me-lg-3" href={% url 'newsletter_registered_user' user.id %}>Subscribe to the newsletter</a>
               {% else %}
