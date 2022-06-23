@@ -12,7 +12,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.core.mail import send_mail
 from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
-from login.tokens import account_activation_token
 from django.utils.encoding import force_str
 from ratelimit.decorators import ratelimit
 from django.contrib.auth.models import User
