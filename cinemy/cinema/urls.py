@@ -1,4 +1,3 @@
-from email.mime import base
 from django.urls import include, path
 from cinema.views import (
     select_cinema,
@@ -14,7 +13,9 @@ from cinema.viewset import MovieCurrentlyPlayingViewSet
 
 router = DefaultRouter()
 router.register(
-    "movies-playing", MovieCurrentlyPlayingViewSet, basename="movies-playing"
+    "movies_playing_this_week",
+    MovieCurrentlyPlayingViewSet,
+    basename="movies_playing_this_week",
 )
 
 
