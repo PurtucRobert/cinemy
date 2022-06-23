@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "cinema",
     "nested_inline",
     "django_q",
+    "newsletter",
     "import_movies",
 ]
 
