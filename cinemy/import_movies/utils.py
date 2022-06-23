@@ -39,7 +39,9 @@ def import_movies_from_uploaded_zip(title, zip):
         for movie in csv_reader:
             try:
                 poster_path = Path(path / movie["poster"])
-                imported_movie = Movie(**movie)
+                imported_movie, _ = Movie.objects.update_or_create(
+                    imdb_id=movie["imdb_id"], defaults=movie
+                )
                 with poster_path.open(mode="rb") as f:
                     imported_movie.poster = File(f, name=poster_path.name)
                     imported_movie.save()
