@@ -36,7 +36,6 @@ def import_movies_from_uploaded_zip(title, zip):
     csv_file = extract_zip(zip, path)
     with open(path / csv_file) as file:
         csv_reader = csv.DictReader(file, delimiter=";")
-        # movies = []
         for movie in csv_reader:
             try:
                 poster_path = Path(path / movie["poster"])
