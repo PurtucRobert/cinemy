@@ -1,4 +1,5 @@
-from django.urls import path
+from email.mime import base
+from django.urls import include, path
 from cinema.views import (
     select_cinema,
     select_movie,
@@ -8,6 +9,14 @@ from cinema.views import (
     reservations_per_user,
     confirm_reservations,
 )
+from rest_framework.routers import DefaultRouter
+from cinema.viewset import MovieCurrentlyPlayingViewSet
+
+router = DefaultRouter()
+router.register(
+    "movies-playing", MovieCurrentlyPlayingViewSet, basename="movies-playing"
+)
+
 
 urlpatterns = [
     path("book_a_ticket/select_cinema/", select_cinema, name="select_cinema"),
@@ -27,4 +36,5 @@ urlpatterns = [
         confirm_reservations,
         name="confirm_reservations",
     ),
+    path("api/", include(router.urls)),
 ]

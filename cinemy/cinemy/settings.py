@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django_q",
     "newsletter",
     "import_movies",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
