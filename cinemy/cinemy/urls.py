@@ -25,5 +25,6 @@ urlpatterns = [
     path("contact/", include("contact.urls")),
     path("user/", include("login.urls")),
     path("", include("cinema.urls")),
+    path("newsletter/", include("newsletter.urls")),
     path("import_movies/", include("import_movies.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
