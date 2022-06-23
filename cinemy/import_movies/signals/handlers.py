@@ -1,4 +1,3 @@
-from concurrent.futures import process
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from import_movies.utils import import_movies_from_uploaded_zip
