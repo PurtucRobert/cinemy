@@ -39,7 +39,7 @@ class Cinema(models.Model):
 
 
 class Hall(models.Model):
-    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name="cinema")
+    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name="halls")
     description = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=50, default="Hall")
     rows = models.IntegerField(default=15)
