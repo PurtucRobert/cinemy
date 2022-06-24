@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django_q",
     "newsletter",
     "import_movies",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -164,4 +165,9 @@ Q_CLUSTER = {
     "retry": 10,
     "timeout": 5,
     "orm": "default",
+}
+
+# Rest Framework settings
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("login.models.BearerAuthentication",)
 }
