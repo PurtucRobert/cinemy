@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "newsletter",
     "import_movies",
     "rest_framework.authtoken",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
