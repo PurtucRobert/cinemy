@@ -9,15 +9,20 @@ from cinema.views import (
     confirm_reservations,
 )
 from rest_framework.routers import DefaultRouter
-from cinema.viewset import MovieCurrentlyPlayingViewSet
+from cinema.viewset import (
+    MovieCurrentlyPlayingViewSet,
+    MovieCurrentlyPlayingDetailedViewSet,
+)
 
 router = DefaultRouter()
 router.register(
-    "movies_playing_this_week",
-    MovieCurrentlyPlayingViewSet,
-    basename="movies_playing_this_week",
+    "movies-playing-this-week", MovieCurrentlyPlayingViewSet, "movies-playing-this-week"
 )
-
+router.register(
+    "movies-playing-this-week-detailed",
+    MovieCurrentlyPlayingDetailedViewSet,
+    "movies-playing-this-week-detailed",
+)
 
 urlpatterns = [
     path("book_a_ticket/select_cinema/", select_cinema, name="select_cinema"),

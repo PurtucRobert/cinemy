@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from cinema.models import Movie
-from cinema.serializers import MovieSerializer
+from cinema.serializers import MovieSerializer, DetailedMovieSerializer
 from cinema.models import PlayingTime
 from cinema.utils import get_current_week_as_range
 from login.authentication import BearerAuthentication
@@ -17,3 +17,8 @@ class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet):
         ).values_list("assigned_movie", flat=True)
     )
     serializer_class = MovieSerializer
+
+
+class MovieCurrentlyPlayingDetailedViewSet(MovieCurrentlyPlayingViewSet):
+
+    serializer_class = DetailedMovieSerializer
