@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "import_movies",
     "rest_framework.authtoken",
     "rest_framework",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -168,7 +169,8 @@ Q_CLUSTER = {
     "orm": "default",
 }
 
-# Rest Framework settings
+# REST Framework related settings
 REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_AUTHENTICATION_CLASSES": ("login.authentication.BearerAuthentication",)
 }

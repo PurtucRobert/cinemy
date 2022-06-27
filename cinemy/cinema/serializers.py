@@ -33,6 +33,15 @@ class PlayingTimeForDetailedMovieSerializer(serializers.ModelSerializer):
         )
 
 
+class PlayingTimeSerializer(serializers.ModelSerializer):
+    hall = HallSerializer(source="assigned_hall")
+    movie = MovieSerializer(source="assigned_movie")
+
+    class Meta:
+        model = PlayingTime
+        exclude = ("id",)
+
+
 class DetailedMovieSerializer(serializers.ModelSerializer):
     playing_times = PlayingTimeForDetailedMovieSerializer(many=True, read_only=True)
 

@@ -12,6 +12,7 @@ from rest_framework.routers import DefaultRouter
 from cinema.viewset import (
     MovieCurrentlyPlayingViewSet,
     MovieCurrentlyPlayingDetailedViewSet,
+    SearchMovieViewSet,
 )
 
 router = DefaultRouter()
@@ -23,6 +24,8 @@ router.register(
     MovieCurrentlyPlayingDetailedViewSet,
     "movies-playing-this-week-detailed",
 )
+router.register("search-movies", SearchMovieViewSet, "search-movies")
+
 
 urlpatterns = [
     path("book_a_ticket/select_cinema/", select_cinema, name="select_cinema"),
