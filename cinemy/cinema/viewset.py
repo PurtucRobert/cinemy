@@ -12,10 +12,12 @@ from login.authentication import BearerAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 
-class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet):
+class ReadOnlyModelViewSetWithAuth(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [BearerAuthentication]
     permission_classes = [IsAuthenticated]
 
+
+class MovieCurrentlyPlayingViewSet(ReadOnlyModelViewSetWithAuth):
     queryset = Movie.objects.filter(
         pk__in=PlayingTime.objects.filter(
             start_time__range=get_current_week_as_range()
@@ -24,7 +26,7 @@ class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MovieSerializer
 
 
-class MovieCurrentlyPlayingDetailedViewSet(MovieCurrentlyPlayingViewSet):
+class MovieCurrentlyPlayingDetailedViewSet(ReadOnlyModelViewSetWithAuth):
     serializer_class = DetailedMovieSerializer
 
 
@@ -34,7 +36,7 @@ class PlayingTimeFilter(filters.FilterSet):
         fields = ["assigned_movie__imdb_id", "assigned_movie__name"]
 
 
-class SearchMovieViewSet(viewsets.ReadOnlyModelViewSet):
+class SearchMovieViewSet(MovieCurrentlyPlayingViewSet):
     queryset = PlayingTime.objects.all()
     serializer_class = PlayingTimeSerializer
     filter_backends = [filters.DjangoFilterBackend]
