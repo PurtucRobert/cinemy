@@ -13,6 +13,7 @@ from cinema.viewset import (
     MovieCurrentlyPlayingViewSet,
     MovieCurrentlyPlayingDetailedViewSet,
     SearchMovieViewSet,
+    HallViewSet,
 )
 
 router = DefaultRouter()
@@ -25,6 +26,7 @@ router.register(
     "movies-playing-this-week-detailed",
 )
 router.register("search-movies", SearchMovieViewSet, "search-movies")
+router.register("hall", HallViewSet, "hall")
 
 
 urlpatterns = [
