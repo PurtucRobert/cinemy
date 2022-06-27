@@ -8,9 +8,13 @@ from cinema.serializers import (
 from cinema.models import PlayingTime
 from cinema.utils import get_current_week_as_range
 from django_filters import rest_framework as filters
+from login.authentication import BearerAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = [BearerAuthentication]
+    permission_classes = [IsAuthenticated]
 
     queryset = Movie.objects.filter(
         pk__in=PlayingTime.objects.filter(

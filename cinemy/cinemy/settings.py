@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django_q",
     "newsletter",
     "import_movies",
+    "rest_framework.authtoken",
     "rest_framework",
     "django_filters",
 ]
@@ -170,5 +171,6 @@ Q_CLUSTER = {
 
 # REST Framework related settings
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_AUTHENTICATION_CLASSES": ("login.authentication.BearerAuthentication",)
 }
