@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "newsletter",
     "import_movies",
     "rest_framework",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -165,4 +166,9 @@ Q_CLUSTER = {
     "retry": 10,
     "timeout": 5,
     "orm": "default",
+}
+
+# REST Framework related settings
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"]
 }
