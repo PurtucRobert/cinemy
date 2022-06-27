@@ -12,7 +12,7 @@ from login.authentication import BearerAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
-class MovieCurrentlyPlayingViewSet(viewsets.ModelViewSet):
+class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [BearerAuthentication]
     permission_classes = [IsAuthenticated]
 
