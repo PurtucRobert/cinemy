@@ -19,7 +19,7 @@ class HallSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Hall
-        exclude = ("id",)
+        fields = "__all__"
 
 
 class PlayingTimeForDetailedMovieSerializer(serializers.ModelSerializer):
