@@ -55,3 +55,16 @@ class HallViewSet(viewsets.ModelViewSet, AdminAuthMixin):
     serializer_class = HallSerializer
     permission_classes = [IsAdminUser]
     authentication_classes = [BearerAuthentication]
+
+
+class MovieViewSet(viewsets.ModelViewSet):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    authentication_classes = [BearerAuthentication]
+
+    def get_permissions(self):
+        if self.action == "list":
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]

@@ -14,6 +14,7 @@ from cinema.viewset import (
     MovieCurrentlyPlayingDetailedViewSet,
     SearchMovieViewSet,
     HallViewSet,
+    MovieViewSet,
 )
 
 router = DefaultRouter()
@@ -27,7 +28,7 @@ router.register(
 )
 router.register("search-movies", SearchMovieViewSet, "search-movies")
 router.register("hall", HallViewSet, "hall")
-
+router.register("movie", MovieViewSet, "movie")
 
 urlpatterns = [
     path("book_a_ticket/select_cinema/", select_cinema, name="select_cinema"),
