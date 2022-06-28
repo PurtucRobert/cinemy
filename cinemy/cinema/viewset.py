@@ -12,12 +12,17 @@ from login.authentication import BearerAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
-class ReadOnlyModelViewSetWithAuth(viewsets.ReadOnlyModelViewSet):
+class CustomerAuthMixin:
     authentication_classes = [BearerAuthentication]
     permission_classes = [IsAuthenticated]
 
 
-class MovieCurrentlyPlayingViewSet(ReadOnlyModelViewSetWithAuth):
+class AdminAuthMixin:
+    authentication_classes = [BearerAuthentication]
+    permissions_classes = [IsAuthenticated, IsAdminUser]
+
+
+class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet, CustomerAuthMixin):
     queryset = Movie.objects.filter(
         pk__in=PlayingTime.objects.filter(
             start_time__range=get_current_week_as_range()
@@ -26,7 +31,9 @@ class MovieCurrentlyPlayingViewSet(ReadOnlyModelViewSetWithAuth):
     serializer_class = MovieSerializer
 
 
-class MovieCurrentlyPlayingDetailedViewSet(ReadOnlyModelViewSetWithAuth):
+class MovieCurrentlyPlayingDetailedViewSet(
+    viewsets.ReadOnlyModelViewSet, CustomerAuthMixin
+):
     serializer_class = DetailedMovieSerializer
 
 
@@ -43,7 +50,7 @@ class SearchMovieViewSet(MovieCurrentlyPlayingViewSet):
     filterset_class = PlayingTimeFilter
 
 
-class HallViewSet(viewsets.ModelViewSet):
+class HallViewSet(viewsets.ModelViewSet, AdminAuthMixin):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     permission_classes = [IsAdminUser]
