@@ -43,7 +43,7 @@ class PlayingTimeFilter(filters.FilterSet):
         fields = ["assigned_movie__imdb_id", "assigned_movie__name"]
 
 
-class SearchMovieViewSet(MovieCurrentlyPlayingViewSet):
+class SearchMovieViewSet(viewsets.ReadOnlyModelViewSet, CustomerAuthMixin):
     queryset = PlayingTime.objects.all()
     serializer_class = PlayingTimeSerializer
     filter_backends = [filters.DjangoFilterBackend]
