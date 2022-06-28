@@ -1,15 +1,15 @@
 from rest_framework import viewsets
-from cinema.models import Movie
 from cinema.serializers import (
     MovieSerializer,
     DetailedMovieSerializer,
     PlayingTimeSerializer,
+    HallSerializer,
 )
-from cinema.models import PlayingTime
+from cinema.models import PlayingTime, Hall, Movie
 from cinema.utils import get_current_week_as_range
 from django_filters import rest_framework as filters
 from login.authentication import BearerAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet):
@@ -39,3 +39,10 @@ class SearchMovieViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PlayingTimeSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = PlayingTimeFilter
+
+
+class HallViewSet(viewsets.ModelViewSet):
+    queryset = Hall.objects.all()
+    serializer_class = HallSerializer
+    permission_classes = [IsAdminUser]
+    authentication_classes = [BearerAuthentication]
