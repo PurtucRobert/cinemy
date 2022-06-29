@@ -3,6 +3,7 @@ from cinema.serializers import (
     MovieSerializer,
     DetailedMovieSerializer,
     PlayingTimeSerializer,
+    PlayingTimeCreateSerializer,
     HallSerializer,
 )
 from cinema.models import PlayingTime, Hall, Movie
@@ -10,6 +11,7 @@ from cinema.utils import get_current_week_as_range
 from django_filters import rest_framework as filters
 from login.authentication import BearerAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import response, status
 
 
 class CustomerAuthMixin:
@@ -19,7 +21,7 @@ class CustomerAuthMixin:
 
 class AdminAuthMixin:
     authentication_classes = [BearerAuthentication]
-    permissions_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet, CustomerAuthMixin):
@@ -68,3 +70,28 @@ class MovieViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
+
+
+class PlayingTimeViewSet(AdminAuthMixin, viewsets.ModelViewSet):
+    queryset = PlayingTime.objects.all()
+    serializer_classes = {
+        "list": PlayingTimeSerializer,
+        "retrieve": PlayingTimeSerializer,
+        "create": PlayingTimeCreateSerializer,
+    }
+    default_serializer_class = PlayingTimeSerializer
+
+    def get_serializer_class(self):
+        return self.serializer_classes.get(self.action, self.default_serializer_class)
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+        instance_serializer = PlayingTimeSerializer(instance)
+        return response.Response(
+            instance_serializer.data, status=status.HTTP_201_CREATED
+        )

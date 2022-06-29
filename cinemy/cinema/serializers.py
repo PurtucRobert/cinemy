@@ -1,3 +1,4 @@
+from rest_framework import response, status
 from rest_framework import serializers
 from cinema.models import Movie, PlayingTime, Hall, Cinema
 
@@ -11,7 +12,7 @@ class CinemaSerializer(serializers.ModelSerializer):
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        exclude = ("id",)
+        fields = "__all__"
 
 
 class HallSerializer(serializers.ModelSerializer):
@@ -39,7 +40,24 @@ class PlayingTimeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PlayingTime
-        exclude = ("id",)
+        fields = ("hall", "movie", "start_time", "id")
+
+
+class PlayingTimeCreateSerializer(serializers.Serializer):
+    hall = serializers.IntegerField()
+    movie = serializers.IntegerField()
+    start_time = serializers.DateTimeField()
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def create(self, validated_data):
+        instance = PlayingTime.objects.create(
+            assigned_movie_id=validated_data["movie"],
+            assigned_hall_id=validated_data["hall"],
+            start_time=validated_data["start_time"],
+        )
+        return instance
 
 
 class DetailedMovieSerializer(serializers.ModelSerializer):
