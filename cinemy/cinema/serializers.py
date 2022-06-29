@@ -1,4 +1,3 @@
-from rest_framework import response, status
 from rest_framework import serializers
 from cinema.models import Movie, PlayingTime, Hall, Cinema
 
