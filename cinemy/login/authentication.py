@@ -1,5 +1,4 @@
-from rest_framework import authentication
-from rest_framework import exceptions
+from rest_framework import authentication, exceptions
 from django.utils.translation import gettext_lazy as _
 import base64
 

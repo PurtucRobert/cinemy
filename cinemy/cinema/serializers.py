@@ -1,5 +1,7 @@
+from requests import request
 from rest_framework import serializers
-from cinema.models import Movie, PlayingTime, Hall, Cinema
+from cinema.models import Movie, PlayingTime, Hall, Cinema, Reservation
+from django.contrib.auth.models import User
 
 
 class CinemaSerializer(serializers.ModelSerializer):
@@ -65,3 +67,51 @@ class DetailedMovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         exclude = ("id",)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username",)
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    reserved_time = PlayingTimeSerializer(read_only=True)
+    reservation_name = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Reservation
+        fields = "__all__"
+
+
+class ReservationCreateSerializer(serializers.Serializer):
+    seat = serializers.IntegerField()
+    reservation_name = serializers.CharField()
+    reserved_time = serializers.IntegerField()
+    confirmed = serializers.BooleanField()
+    expired = serializers.BooleanField()
+
+    def validate_reservation_name(self, data):
+        try:
+            user = User.objects.get(username=data)
+            request_user = self.context["request"].user
+            if (user != request_user) and not request_user.is_superuser:
+                raise serializers.ValidationError(
+                    f"Payload username is not matching token"
+                )
+        except User.DoesNotExist:
+            raise serializers.ValidationError(f"Username: {data} does not exists")
+        return data
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def create(self, validated_data):
+        instance = Reservation.objects.create(
+            seat_id=validated_data["seat"],
+            reservation_name=User.objects.get(
+                username=validated_data["reservation_name"]
+            ),
+            reserved_time_id=validated_data["reserved_time"],
+        )
+        return instance
