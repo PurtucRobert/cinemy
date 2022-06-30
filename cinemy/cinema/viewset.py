@@ -19,10 +19,10 @@ class CustomerAuthMixin:
 
 class AdminAuthMixin:
     authentication_classes = [BearerAuthentication]
-    permissions_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
-class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet, CustomerAuthMixin):
+class MovieCurrentlyPlayingViewSet(CustomerAuthMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Movie.objects.filter(
         pk__in=PlayingTime.objects.filter(
             start_time__range=get_current_week_as_range()
@@ -32,7 +32,7 @@ class MovieCurrentlyPlayingViewSet(viewsets.ReadOnlyModelViewSet, CustomerAuthMi
 
 
 class MovieCurrentlyPlayingDetailedViewSet(
-    viewsets.ReadOnlyModelViewSet, CustomerAuthMixin
+    CustomerAuthMixin, viewsets.ReadOnlyModelViewSet
 ):
     serializer_class = DetailedMovieSerializer
 
@@ -43,14 +43,14 @@ class PlayingTimeFilter(filters.FilterSet):
         fields = ["assigned_movie__imdb_id", "assigned_movie__name"]
 
 
-class SearchMovieViewSet(viewsets.ReadOnlyModelViewSet, CustomerAuthMixin):
+class SearchMovieViewSet(CustomerAuthMixin, viewsets.ReadOnlyModelViewSet):
     queryset = PlayingTime.objects.all()
     serializer_class = PlayingTimeSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = PlayingTimeFilter
 
 
-class HallViewSet(viewsets.ModelViewSet, AdminAuthMixin):
+class HallViewSet(AdminAuthMixin, viewsets.ModelViewSet):
     queryset = Hall.objects.all()
     serializer_class = HallSerializer
     permission_classes = [IsAdminUser]
