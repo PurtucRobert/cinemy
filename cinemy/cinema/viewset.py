@@ -5,10 +5,13 @@ from cinema.serializers import (
     PlayingTimeSerializer,
     PlayingTimeCreateSerializer,
     HallSerializer,
+    ReservationSerializer,
+    ReservationCreateSerializer,
 )
-from cinema.models import PlayingTime, Hall, Movie
+from cinema.models import PlayingTime, Hall, Movie, Reservation
 from cinema.utils import get_current_week_as_range
 from django_filters import rest_framework as filters
+from login.permissions import IsOwner
 from login.authentication import BearerAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import response, status
@@ -22,6 +25,11 @@ class CustomerAuthMixin:
 class AdminAuthMixin:
     authentication_classes = [BearerAuthentication]
     permission_classes = [IsAuthenticated, IsAdminUser]
+
+
+class IsOwnerAuthMixin:
+    authentication_classes = [BearerAuthentication]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 
 class MovieCurrentlyPlayingViewSet(CustomerAuthMixin, viewsets.ReadOnlyModelViewSet):
@@ -92,6 +100,35 @@ class PlayingTimeViewSet(AdminAuthMixin, viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         instance = self.perform_create(serializer)
         instance_serializer = PlayingTimeSerializer(instance)
+        return response.Response(
+            instance_serializer.data, status=status.HTTP_201_CREATED
+        )
+
+
+class UserReservationViewSet(IsOwnerAuthMixin, viewsets.ModelViewSet):
+    serializer_classes = {
+        "list": ReservationSerializer,
+        "retrieve": ReservationSerializer,
+        "create": ReservationCreateSerializer,
+    }
+    default_serializer_class = ReservationSerializer
+
+    def get_serializer_class(self):
+        return self.serializer_classes.get(self.action, self.default_serializer_class)
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Reservation.objects.all()
+        return Reservation.objects.filter(reservation_name=self.request.user)
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+        instance_serializer = self.default_serializer_class(instance)
         return response.Response(
             instance_serializer.data, status=status.HTTP_201_CREATED
         )
